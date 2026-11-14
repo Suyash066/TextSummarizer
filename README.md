@@ -28,7 +28,7 @@ TextSummarizer/
 ## Setup
 
 ```bash
-git clone <your-repo-url>
+git clone <[your-repo-url](https://github.com/Suyash066/TextSummarizer/edit/main/README.md)>
 cd TextSummarizer
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
