@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Environments
+.venv/
+venv/
+env/
+
+# Editor / OS
+.vscode/
+.DS_Store
+
+# Training output (several GB of checkpoints)
+results/
+
+# Trained model weights (231 MB, over GitHub's 100 MB file limit).
+# Regenerate with text_summarizer.ipynb, or host on Hugging Face Hub / Git LFS.
+saved_summary_model/model.safetensors

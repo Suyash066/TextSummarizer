@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Summarizer</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Text Summarizer</h1>
+            <p class="subtitle">Paste a conversation or long text and get a short summary.</p>
+        </header>
+
+        <form id="summarization-form" class="card">
+            <label for="dialogue-input">Your text</label>
+            <textarea id="dialogue-input" name="dialogue" rows="10"
+                placeholder="e.g.&#10;Amanda: I baked cookies. Do you want some?&#10;Jerry: Sure!&#10;Amanda: I'll bring you tomorrow :-)"
+                required></textarea>
+
+            <div class="actions">
+                <!-- Summarize must stay the first <button> in the DOM (JS uses querySelector("button")) -->
+                <button type="submit" class="btn btn-primary">Summarize</button>
+                <button type="reset" class="btn btn-secondary">Clear</button>
+            </div>
+        </form>
+
+        <div class="card result">
+            <h2>Summary</h2>
+            <p id="summary-text" class="placeholder">Your summary will appear here.</p>
+        </div>
+
+        <footer>Built with FastAPI &amp; Transformers</footer>
+    </div>
+
+    <script>
+        document.getElementById("summarization-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            // Get references to elements
+            const dialogueInput = document.getElementById("dialogue-input");
+            const summaryText = document.getElementById("summary-text");
+            const submitButton = document.querySelector("button");
+
+            const dialogue = dialogueInput.value.trim();
+            if(!dialogue) return;
+
+            // Show processing message and disable button
+            summaryText.innerText = "Processing...";
+            submitButton.disabled = true;
+
+            try {
+                // Send dialogue to backend
+                const response = await fetch("/summarize", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ dialogue })
+                });
+
+                if(!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                summaryText.innerText = data.summary || "No summary returned.";
+            } catch(err) {
+                summaryText.innerText = `Error: ${err.message}`;
+            } finally {
+                submitButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
